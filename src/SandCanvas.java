@@ -4,7 +4,7 @@ public class SandCanvas extends Canvas
 {
     public void paint(Graphics g)
     {
-        g.setColor(Color.black);
-        g.drawLine(20, 20, 400, 400);
+        g.setColor(Color.red);
+        g.drawLine(500, 500, 505, 505);
     }
 }
