@@ -99,15 +99,15 @@ public class Simulation
 
     private void updateSand(int index)
     {
-        if (isValidIndex(bottomNeighbourIndex(index)) && isEmpty(bottomNeighbourIndex(index)))
+        if (isValidIndex(bottomNeighbourIndex(index)) && isEmpty(bottomNeighbourIndex(index)) && isTempEmpty(index))
         {
             tempCells[bottomNeighbourIndex(index)] = cells[index];
         }
-        else if (isValidIndex(bottomNeighbourIndex(index)) && isEmpty(bottomLeftNeighbourIndex(index)) && inSameRow(bottomNeighbourIndex(index), bottomLeftNeighbourIndex(index)))
+        else if (isValidIndex(bottomNeighbourIndex(index)) && isEmpty(bottomLeftNeighbourIndex(index)) && isTempEmpty(bottomLeftNeighbourIndex(index)) && inSameRow(bottomNeighbourIndex(index), bottomLeftNeighbourIndex(index)))
         {
             tempCells[bottomLeftNeighbourIndex(index)] = cells[index];
         }
-        else if (isValidIndex(bottomRightNeighbourIndex(index)) && isEmpty(bottomRightNeighbourIndex(index)) && inSameRow(bottomNeighbourIndex(index), bottomRightNeighbourIndex(index)))
+        else if (isValidIndex(bottomRightNeighbourIndex(index)) && isEmpty(bottomRightNeighbourIndex(index)) && isTempEmpty(bottomRightNeighbourIndex(index)) && inSameRow(bottomNeighbourIndex(index), bottomRightNeighbourIndex(index)))
         {
             tempCells[bottomRightNeighbourIndex(index)] = cells[index];
         }
@@ -156,24 +156,23 @@ public class Simulation
 
     private void updateWater(int index)
     {
-        if (isValidIndex(bottomNeighbourIndex(index)) && isEmpty(bottomNeighbourIndex(index)))
+        if (isValidIndex(bottomNeighbourIndex(index)) && isEmpty(bottomNeighbourIndex(index)) && isTempEmpty(bottomNeighbourIndex(index)))
         {
             tempCells[bottomNeighbourIndex(index)] = cells[index];
         }
-        else if (isValidIndex(bottomNeighbourIndex(index)) && isEmpty(bottomLeftNeighbourIndex(index)) && inSameRow(bottomNeighbourIndex(index), bottomLeftNeighbourIndex(index)))
+        else if (isValidIndex(bottomNeighbourIndex(index)) && isEmpty(bottomLeftNeighbourIndex(index)) && isTempEmpty(bottomLeftNeighbourIndex(index)) && inSameRow(bottomNeighbourIndex(index), bottomLeftNeighbourIndex(index)))
         {
-            System.out.println("YES");
             tempCells[bottomLeftNeighbourIndex(index)] = cells[index];
         }
-        else if (isValidIndex(bottomRightNeighbourIndex(index)) && isEmpty(bottomRightNeighbourIndex(index)) && inSameRow(bottomNeighbourIndex(index), bottomRightNeighbourIndex(index)))
+        else if (isValidIndex(bottomRightNeighbourIndex(index)) && isEmpty(bottomRightNeighbourIndex(index)) && isTempEmpty(bottomRightNeighbourIndex(index)) && inSameRow(bottomNeighbourIndex(index), bottomRightNeighbourIndex(index)))
         {
             tempCells[bottomRightNeighbourIndex(index)] = cells[index];
         }
-        else if (isValidIndex(leftNeighbourIndex(index)) && isEmpty(leftNeighbourIndex(index)) && inSameRow(index, leftNeighbourIndex(index)))
+        else if (isValidIndex(leftNeighbourIndex(index)) && isEmpty(leftNeighbourIndex(index)) && isTempEmpty(leftNeighbourIndex(index)) && inSameRow(index, leftNeighbourIndex(index)))
         {
             tempCells[leftNeighbourIndex(index)] = cells[index];
         }
-        else if (isValidIndex(rightNeighbourIndex(index)) && isEmpty(rightNeighbourIndex(index)) && inSameRow(index, rightNeighbourIndex(index)))
+        else if (isValidIndex(rightNeighbourIndex(index)) && isEmpty(rightNeighbourIndex(index)) && isTempEmpty(rightNeighbourIndex(index)) && inSameRow(index, rightNeighbourIndex(index)))
         {
             tempCells[rightNeighbourIndex(index)] = cells[index];
         }
@@ -197,14 +196,29 @@ public class Simulation
         return (cells[index].getId() == ParticleType.EMPTY);
     }
 
+    boolean isTempEmpty(int index)
+    {
+        return (tempCells[index].getId() == ParticleType.EMPTY);
+    }
+
     boolean isSand(int index)
     {
         return (cells[index].getId() == ParticleType.SAND);
     }
 
+    boolean isTempSand(int index)
+    {
+        return (tempCells[index].getId() == ParticleType.SAND);
+    }
+
     boolean isWater(int index)
     {
         return (cells[index].getId() == ParticleType.WATER);
+    }
+
+    boolean isTempWater(int index)
+    {
+        return (tempCells[index].getId() == ParticleType.WATER);
     }
 
     boolean inSameRow(int index1, int index2)

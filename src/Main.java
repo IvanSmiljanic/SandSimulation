@@ -17,7 +17,7 @@ public class Main
         Simulation sim = new Simulation();
         boolean running = true;
         double prevTime = (double) System.currentTimeMillis() / 1000;
-        ParticleType selectedParticle = ParticleType.SAND;
+        ParticleType selectedParticle = ParticleType.WATER;
         byte cycle = 0;
 
         panel.sim = sim;
@@ -48,10 +48,18 @@ public class Main
                         if (selectedParticle == ParticleType.SAND)
                         {
                             sim.setCell(sim.toLinearIndex(mouseX / Config.CELL_SIZE, mouseY / Config.CELL_SIZE), new Particle.SandParticle());
+                            sim.setCell(sim.toLinearIndex(mouseX / Config.CELL_SIZE - 1, mouseY / Config.CELL_SIZE), new Particle.SandParticle());
+                            sim.setCell(sim.toLinearIndex(mouseX / Config.CELL_SIZE + 1, mouseY / Config.CELL_SIZE), new Particle.SandParticle());
+                            sim.setCell(sim.toLinearIndex(mouseX / Config.CELL_SIZE, mouseY / Config.CELL_SIZE - 1), new Particle.SandParticle());
+                            sim.setCell(sim.toLinearIndex(mouseX / Config.CELL_SIZE, mouseY / Config.CELL_SIZE + 1), new Particle.SandParticle());
                         }
                         else if (selectedParticle == ParticleType.WATER)
                         {
                             sim.setCell(sim.toLinearIndex(mouseX / Config.CELL_SIZE, mouseY / Config.CELL_SIZE), new Particle.WaterParticle());
+                            sim.setCell(sim.toLinearIndex(mouseX / Config.CELL_SIZE - 1, mouseY / Config.CELL_SIZE), new Particle.WaterParticle());
+                            sim.setCell(sim.toLinearIndex(mouseX / Config.CELL_SIZE + 1, mouseY / Config.CELL_SIZE), new Particle.WaterParticle());
+                            sim.setCell(sim.toLinearIndex(mouseX / Config.CELL_SIZE, mouseY / Config.CELL_SIZE - 1), new Particle.WaterParticle());
+                            sim.setCell(sim.toLinearIndex(mouseX / Config.CELL_SIZE, mouseY / Config.CELL_SIZE + 1), new Particle.WaterParticle());
                         }
                     }
                 }
