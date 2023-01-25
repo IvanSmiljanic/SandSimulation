@@ -17,6 +17,8 @@ public class Main
         Simulation sim = new Simulation();
         boolean running = true;
         double prevTime = (double) System.currentTimeMillis() / 1000;
+        ParticleType selectedParticle = ParticleType.SAND;
+        byte cycle = 0;
 
         panel.sim = sim;
         panel.addMouseListener(new MouseDetection());
@@ -37,11 +39,20 @@ public class Main
             {
                 prevTime = currentTime;
                 fps = (int) (1d/dt);
-                if (mouseDown == true)
+                cycle = (byte) ((cycle + 1) % 10);
+
+                if (mouseDown == true && cycle == 0)
                 {
                     if (sim.getCell(sim.toLinearIndex(mouseX / Config.CELL_SIZE, mouseY / Config.CELL_SIZE)) instanceof Particle.EmptyParticle)
                     {
-                        sim.setCell(sim.toLinearIndex(mouseX / Config.CELL_SIZE, mouseY / Config.CELL_SIZE), new Particle.SandParticle());
+                        if (selectedParticle == ParticleType.SAND)
+                        {
+                            sim.setCell(sim.toLinearIndex(mouseX / Config.CELL_SIZE, mouseY / Config.CELL_SIZE), new Particle.SandParticle());
+                        }
+                        else if (selectedParticle == ParticleType.WATER)
+                        {
+                            sim.setCell(sim.toLinearIndex(mouseX / Config.CELL_SIZE, mouseY / Config.CELL_SIZE), new Particle.WaterParticle());
+                        }
                     }
                 }
                 sim.simStep();
