@@ -33,7 +33,7 @@ public class Particle
         EmptyParticle()
         {
             id = ParticleType.EMPTY;
-            color = Color.black;
+            color = new Color(51, 51, 51);
         }
     }
 

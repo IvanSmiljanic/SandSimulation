@@ -1,6 +1,7 @@
 public class Simulation
 {
     Particle[] cells;
+    Particle[] tempCells;
     int size;
     int width;
     int height;
@@ -10,12 +11,41 @@ public class Simulation
         size = calculateSize();
         width = calculateWidth();
         height = calculateHeight();
+        initCells();
+    }
+
+    private void initCells()
+    {
         cells = new Particle[size];
+        for (int i = 0; i < size; i++)
+        {
+            cells[i] = new Particle.EmptyParticle();
+        }
+    }
+
+    public Particle[] getCells()
+    {
+        return cells;
+    }
+
+    public Particle getCell(int index)
+    {
+        return cells[index];
+    }
+
+    public void setCell(int index, Particle p)
+    {
+        cells[index] = p;
+    }
+
+    public int toLinearIndex(int x, int y)
+    {
+        return (x + width * y);
     }
 
     private int calculateSize()
     {
-        return (Config.SIZE[0] * Config.SIZE[1]) / Config.CELL_SIZE;
+        return (Config.SIZE[0] * Config.SIZE[1]) / (Config.CELL_SIZE * Config.CELL_SIZE);
     }
 
     private int calculateWidth()
@@ -30,38 +60,74 @@ public class Simulation
 
     public void simStep()
     {
-        Particle[] newArray = new Particle[size];
+        tempCells = new Particle[size];
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++)
+        {
+            tempCells[i] = new Particle.EmptyParticle();
+        }
+
+        for (int i = 0; i < size; i++)
+        {
             ParticleType id = cells[i].getId();
+
             switch (id) {
                 case EMPTY:
                     break;
 
                 case SAND:
-                    newArray = updateSand(newArray, i);
+                    updateSand(i);
+                    break;
 
                 case WATER:
-                    updateWater(newArray, i);
+                    updateWater(i);
+                    break;
             }
         }
+
+        System.arraycopy(tempCells, 0, cells, 0, cells.length);
     }
 
-    private Particle[] updateSand(Particle[] array, int index)
+    private void updateSand(int index)
     {
         if (isValidIndex(bottomNeighbourIndex(index)))
         {
             if (isEmpty(bottomNeighbourIndex(index)))
             {
-
+                tempCells[bottomNeighbourIndex(index)] = cells[index];
+            }
+            else if (isSand(bottomNeighbourIndex(index)))
+            {
+                if (isEmpty(bottomLeftNeighbourIndex(index)) && inSameRow(bottomNeighbourIndex(index), bottomLeftNeighbourIndex(index)))
+                {
+                    tempCells[bottomLeftNeighbourIndex(index)] = cells[index];
+                }
+                else if (isValidIndex(bottomRightNeighbourIndex(index)))
+                {
+                    if (isEmpty(bottomRightNeighbourIndex(index)) && inSameRow(bottomNeighbourIndex(index), bottomRightNeighbourIndex(index)))
+                    {
+                        tempCells[bottomRightNeighbourIndex(index)] = cells[index];
+                    }
+                    else
+                    {
+                        tempCells[index] = cells[index];
+                    }
+                }
+                else
+                {
+                    tempCells[index] = cells[index];
+                }
             }
         }
-        return array;
+        else
+        {
+            tempCells[index] = cells[index];
+        }
     }
 
-    private Particle[] updateWater(Particle[] array, int index)
+    private void updateWater(int index)
     {
-        return array;
+        System.out.println("id: " + cells[index].getId());
     }
 
     boolean isValidIndex(int index)
