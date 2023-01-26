@@ -8,6 +8,22 @@ public class Particle
     protected Color color;
     protected boolean updated = false;
 
+    public static Color getColorFromId(ParticleType id)
+    {
+        switch (id)
+        {
+            case EMPTY:
+                return new Color(51, 51, 51);
+
+            case SAND:
+                return Color.yellow;
+
+            case WATER:
+                return Color.blue;
+        }
+        return null;
+    }
+
     public void setId(ParticleType id) {this.id = id;}
 
     public void setLifeTime(float lifeTime) {this.lifeTime = lifeTime;}
@@ -33,7 +49,7 @@ public class Particle
         EmptyParticle()
         {
             id = ParticleType.EMPTY;
-            color = new Color(51, 51, 51);
+            color = getColorFromId(id);
         }
     }
 
@@ -42,7 +58,7 @@ public class Particle
         SandParticle()
         {
             id = ParticleType.SAND;
-            color = Color.yellow;
+            color = getColorFromId(id);
         }
     }
 
@@ -51,7 +67,7 @@ public class Particle
         WaterParticle()
         {
             id=ParticleType.WATER;
-            color = Color.blue;
+            color = getColorFromId(id);
         }
     }
 }

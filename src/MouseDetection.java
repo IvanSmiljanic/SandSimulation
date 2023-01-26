@@ -15,7 +15,6 @@ public class MouseDetection extends MouseAdapter
 
     public void mouseDragged(MouseEvent e)
     {
-        System.out.println("DRAGGED");
         Main.mouseX = e.getX();
         Main.mouseY = e.getY();
     }

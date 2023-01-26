@@ -65,31 +65,62 @@ public class Simulation
         for (int i = 0; i < size; i++)
         {
             tempCells[i] = new Particle.EmptyParticle();
-        }
-
-        for (int i = 0; i < size; i++)
-        {
             cells[i].setUpdated(false);
         }
 
-        for (int i = 0; i < size; i++)
+        int index;
+
+        if (Main.frameCounter % 2 == 0)
         {
-            ParticleType id = cells[i].getId();
-
-            if (!cells[i].getUpdated())
+            for (int i = height - 1; i >= 0; i--)
             {
-                cells[i].setUpdated(true);
-                switch (id) {
-                    case EMPTY:
-                        break;
+                for (int j = 0; j < width; j++)
+                {
+                    index = toLinearIndex(j, i);
+                    cells[index].setUpdated(true);
+                    ParticleType id = cells[index].getId();
 
-                    case SAND:
-                        updateSand(i);
-                        break;
+                    switch (id)
+                    {
+                        case EMPTY:
+                            break;
 
-                    case WATER:
-                        updateWater(i);
-                        break;
+                        case SAND:
+                            updateSand(index);
+                            break;
+
+                        case WATER:
+                            updateWater(index);
+                            break;
+
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (int i = height - 1; i >= 0; i--)
+            {
+                for (int j = width - 1; j >= 0; j--)
+                {
+                    index = toLinearIndex(j, i);
+                    cells[index].setUpdated(true);
+                    ParticleType id = cells[index].getId();
+
+                    switch (id)
+                    {
+                        case EMPTY:
+                            break;
+
+                        case SAND:
+                            updateSand(index);
+                            break;
+
+                        case WATER:
+                            updateWater(index);
+                            break;
+
+                    }
                 }
             }
         }
@@ -117,62 +148,31 @@ public class Simulation
         }
     }
 
-//    private void updateSand(int index)
-//    {
-//        if (isValidIndex(bottomNeighbourIndex(index)))
-//        {
-//            if (isEmpty(bottomNeighbourIndex(index)))
-//            {
-//                tempCells[bottomNeighbourIndex(index)] = cells[index];
-//            }
-//            else if (isSand(bottomNeighbourIndex(index)))
-//            {
-//                if (isEmpty(bottomLeftNeighbourIndex(index)) && inSameRow(bottomNeighbourIndex(index), bottomLeftNeighbourIndex(index)))
-//                {
-//                    tempCells[bottomLeftNeighbourIndex(index)] = cells[index];
-//                }
-//                else if (isValidIndex(bottomRightNeighbourIndex(index)))
-//                {
-//                    if (isEmpty(bottomRightNeighbourIndex(index)) && inSameRow(bottomNeighbourIndex(index), bottomRightNeighbourIndex(index)))
-//                    {
-//                        tempCells[bottomRightNeighbourIndex(index)] = cells[index];
-//                    }
-//                    else
-//                    {
-//                        tempCells[index] = cells[index];
-//                    }
-//                }
-//                else
-//                {
-//                    tempCells[index] = cells[index];
-//                }
-//            }
-//        }
-//        else
-//        {
-//            tempCells[index] = cells[index];
-//        }
-//    }
-
     private void updateWater(int index)
     {
-        if (isValidIndex(bottomNeighbourIndex(index)) && isEmpty(bottomNeighbourIndex(index)) && isTempEmpty(bottomNeighbourIndex(index)))
+        if (isValidIndex(bottomNeighbourIndex(index)) && isTempEmpty(bottomNeighbourIndex(index))
+                && (isEmpty(bottomNeighbourIndex(index))
+                || (!isEmpty(bottomNeighbourIndex(index)) && isUpdated(bottomNeighbourIndex(index)))))
         {
             tempCells[bottomNeighbourIndex(index)] = cells[index];
         }
-        else if (isValidIndex(bottomNeighbourIndex(index)) && isEmpty(bottomLeftNeighbourIndex(index)) && isTempEmpty(bottomLeftNeighbourIndex(index)) && inSameRow(bottomNeighbourIndex(index), bottomLeftNeighbourIndex(index)))
+        else if (isValidIndex(bottomNeighbourIndex(index)) && isTempEmpty(bottomLeftNeighbourIndex(index)) && inSameRow(bottomNeighbourIndex(index), bottomLeftNeighbourIndex(index))
+                && (isEmpty(bottomLeftNeighbourIndex(index))
+                || (!isEmpty(bottomLeftNeighbourIndex(index)) && isUpdated(bottomLeftNeighbourIndex(index)))))
         {
             tempCells[bottomLeftNeighbourIndex(index)] = cells[index];
         }
-        else if (isValidIndex(bottomRightNeighbourIndex(index)) && isEmpty(bottomRightNeighbourIndex(index)) && isTempEmpty(bottomRightNeighbourIndex(index)) && inSameRow(bottomNeighbourIndex(index), bottomRightNeighbourIndex(index)))
+        else if (isValidIndex(bottomRightNeighbourIndex(index)) && isTempEmpty(bottomRightNeighbourIndex(index)) && inSameRow(bottomNeighbourIndex(index), bottomRightNeighbourIndex(index))
+                && (isEmpty(bottomRightNeighbourIndex(index))
+                || (!isEmpty(bottomLeftNeighbourIndex(index)) && isUpdated(bottomLeftNeighbourIndex(index)))))
         {
             tempCells[bottomRightNeighbourIndex(index)] = cells[index];
         }
-        else if (isValidIndex(leftNeighbourIndex(index)) && isEmpty(leftNeighbourIndex(index)) && isTempEmpty(leftNeighbourIndex(index)) && inSameRow(index, leftNeighbourIndex(index)))
+        else if (isValidIndex(leftNeighbourIndex(index)) && isTempEmpty(leftNeighbourIndex(index)) && inSameRow(index, leftNeighbourIndex(index)) && isEmpty(leftNeighbourIndex(index)))
         {
             tempCells[leftNeighbourIndex(index)] = cells[index];
         }
-        else if (isValidIndex(rightNeighbourIndex(index)) && isEmpty(rightNeighbourIndex(index)) && isTempEmpty(rightNeighbourIndex(index)) && inSameRow(index, rightNeighbourIndex(index)))
+        else if (isValidIndex(rightNeighbourIndex(index)) && isTempEmpty(rightNeighbourIndex(index)) && inSameRow(index, rightNeighbourIndex(index)) && isEmpty(rightNeighbourIndex(index)))
         {
             tempCells[rightNeighbourIndex(index)] = cells[index];
         }
@@ -185,6 +185,15 @@ public class Simulation
     boolean isValidIndex(int index)
     {
         if (0 <= index && index < size)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    boolean isUpdated(int index)
+    {
+        if (cells[index].getUpdated() == true)
         {
             return true;
         }
