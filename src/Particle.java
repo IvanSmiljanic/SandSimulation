@@ -16,7 +16,7 @@ public class Particle
                 return new Color(51, 51, 51);
 
             case SAND:
-                return Color.yellow;
+                return new Color(150, 145, 70);
 
             case WATER:
                 return Color.blue;
