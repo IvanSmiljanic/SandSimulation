@@ -77,22 +77,25 @@ public class Simulation
                 for (int j = 0; j < width; j++)
                 {
                     index = toLinearIndex(j, i);
-                    cells[index].setUpdated(true);
-                    ParticleType id = cells[index].getId();
 
-                    switch (id)
+                    if (!cells[index].getUpdated())
                     {
-                        case EMPTY:
-                            break;
+                        cells[index].setUpdated(true);
+                        ParticleType id = cells[index].getId();
 
-                        case SAND:
-                            updateSand(index);
-                            break;
+                        switch (id) {
+                            case EMPTY:
+                                break;
 
-                        case WATER:
-                            updateWater(index);
-                            break;
+                            case SAND:
+                                updateSand(index);
+                                break;
 
+                            case WATER:
+                                updateWater(index);
+                                break;
+
+                        }
                     }
                 }
             }
